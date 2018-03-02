@@ -3,6 +3,17 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
+  componentDidMount() {
+    fetch('http://localhost:4000')
+      .then(response => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(`Error occured on fetch: ${error}`);
+      })
+  }
+
   render() {
     return (
       <div className="App">
