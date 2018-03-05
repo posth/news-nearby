@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
 
+  constructor() {
+    super();
+    this.state = {
+      newsapi: null
+    }
+  }
+
   componentDidMount() {
-    fetch('http://localhost:4000')
+    fetch('http://localhost:4000/newsAPI')
+      .then(result => result.json())
       .then(response => {
-        console.log(response);
+        console.log('news api results for canada', response.articles);
+        this.setState({
+          newsapi: response.articles
+        })
       })
       .catch((error) => {
         console.error(`Error occured on fetch: ${error}`);
@@ -18,12 +28,13 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Nearby News!</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <section>
+          {
+            JSON.stringify(this.state.newsapi)
+          }
+        </section>
       </div>
     );
   }
