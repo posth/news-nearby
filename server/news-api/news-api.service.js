@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 
 // News API
 const NewsAPI = require('newsapi');
@@ -7,12 +6,16 @@ const { NEWS_API_KEY } = require('./news-api.config');;
 
 const newsapi = new NewsAPI(NEWS_API_KEY);
 
-router.get('/', (req, res, next) => {
-    newsapi.v2.topHeadlines({
-        country: 'ca'
+function getArticlesNewsAPI(country) {
+    return newsapi.v2.topHeadlines({
+        country
     }).then(response => {
-        res.send(response);
-    })
-});
+        return response;
+    }).catch(err => {
+        return Promise.reject(Error(`Error occured on newsapi.v2.topHeadlines with ${err}`));
+    });
+}
 
-module.exports = router;
+module.exports = {
+    getArticlesNewsAPI
+};

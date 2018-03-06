@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import { subscribeToNewsAPI } from './services/news-api.client';
+
 class App extends Component {
 
   constructor() {
     super();
     this.state = {
-      newsapi: null
-    }
-  }
+      location: 'ca',
+      newsAPIArticles: 'No articles from News API'
+    };
 
-  componentDidMount() {
-    fetch('http://localhost:4000/newsAPI')
-      .then(result => result.json())
-      .then(response => {
-        console.log('news api results for canada', response.articles);
-        this.setState({
-          newsapi: response.articles
-        })
-      })
-      .catch((error) => {
-        console.error(`Error occured on fetch: ${error}`);
-      })
+    // Subscribing to news API
+    subscribeToNewsAPI((newsAPIArticles) => this.setState({
+      newsAPIArticles
+    }), this.state.location);
+
   }
 
   render() {
@@ -31,9 +26,7 @@ class App extends Component {
           <h1 className="App-title">Nearby News!</h1>
         </header>
         <section>
-          {
-            JSON.stringify(this.state.newsapi)
-          }
+          Articles received are: {JSON.stringify(this.state.newsAPIArticles)}
         </section>
       </div>
     );
