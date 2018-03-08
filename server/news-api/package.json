@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "news-api.server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "newsapi": "cd news-api && nodemon news-api.server.js"
+    "newsapi": "nodemon news-api.server.js"
   },
   "author": "",
   "license": "ISC",

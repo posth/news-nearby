@@ -4,8 +4,8 @@
 client/node_modules
 client/public
 
-# server ignore files
-server/node_modules
+# newsapi service ignore files
+server/news-api/node_modules
 
 npm-debug.log*
 yarn-debug.log*

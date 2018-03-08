@@ -33,26 +33,28 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Nearby News!</h1>
-          <article>
-            <input onChange={event => {
-              this.setState({
-                location: event.target.value
-              })
-            }} type="text" />
-            <button onClick={() => {
-              fetchNewsAPIArticles(this.state.location);
-            }}>Change location of articles</button>
-          </article>
         </header>
-        {this.state.newsAPIArticles !== null && <section>
-          <h2>News API Articles</h2>
-          <article>
-            {
-              this.state.newsAPIArticles["articles"]
-                .map((article, index) => <NewsAPIArticle article={article} key={index} />)
-            }
-          </article>
-        </section>}
+        <article>
+          <h4>NewsAPI search location (ca, fr, us)</h4>
+          <input onChange={event => {
+            this.setState({
+              location: event.target.value
+            })
+          }} type="text" />
+          <button onClick={() => {
+            fetchNewsAPIArticles(this.state.location);
+          }}>Change location of articles</button>
+        </article>
+        {this.state.newsAPIArticles !== null &&
+          <section>
+            <h2>News API Articles</h2>
+            <article>
+              {
+                this.state.newsAPIArticles["articles"]
+                  .map((article, index) => <NewsAPIArticle article={article} key={index} />)
+              }
+            </article>
+          </section>}
       </div>
     );
   }
