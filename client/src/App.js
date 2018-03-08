@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import { subscribeToNewsAPI } from './services/news-api.client';
+// Components
+import NewsAPIArticle from './components/news-api-article.component';
+
+import {
+  subscribeToNewsAPI,
+  fetchNewsAPIArticles
+} from './services/news-api.client';
 
 class App extends Component {
 
@@ -9,14 +15,17 @@ class App extends Component {
     super();
     this.state = {
       location: 'ca',
-      newsAPIArticles: 'No articles from News API'
+      newsAPIArticles: null
     };
 
-    // Subscribing to news API
+    // Subscribing to news API web socket
     subscribeToNewsAPI((newsAPIArticles) => this.setState({
       newsAPIArticles
-    }), this.state.location);
+    }));
+  }
 
+  componentDidMount() {
+    fetchNewsAPIArticles(this.state.location);
   }
 
   render() {
@@ -24,10 +33,26 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Nearby News!</h1>
+          <article>
+            <input onChange={event => {
+              this.setState({
+                location: event.target.value
+              })
+            }} type="text" />
+            <button onClick={() => {
+              fetchNewsAPIArticles(this.state.location);
+            }}>Change location of articles</button>
+          </article>
         </header>
-        <section>
-          Articles received are: {JSON.stringify(this.state.newsAPIArticles)}
-        </section>
+        {this.state.newsAPIArticles !== null && <section>
+          <h2>News API Articles</h2>
+          <article>
+            {
+              this.state.newsAPIArticles["articles"]
+                .map((article, index) => <NewsAPIArticle article={article} key={index} />)
+            }
+          </article>
+        </section>}
       </div>
     );
   }

@@ -1,5 +1,3 @@
-const express = require('express');
-
 // News API
 const NewsAPI = require('newsapi');
 const { NEWS_API_KEY } = require('./news-api.config');;
