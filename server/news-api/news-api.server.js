@@ -10,7 +10,9 @@ io.on('connection', (client) => {
     let articles$ = new Rx.BehaviorSubject(null);
 
     // Subscribing to any change in the Subject stream of articles, if there is a change, we emit it back to the client
-    articles$.subscribe(newArticlesToEmit => client.emit('newsAPI', newArticlesToEmit));
+    articles$
+        .filter(newArticlesReceived => newArticlesReceived)
+        .subscribe(newArticlesToEmit => client.emit('newsAPI', newArticlesToEmit));
 
     // Whenever the client updates the location, we update the value in our local Subject stream
     client.on('updateNewsAPIArticlesLocation', (newLocation) => {
@@ -26,7 +28,7 @@ io.on('connection', (client) => {
     // The event that is used to start polling the NewsAPI for articles
     client.on('startPollingNewsAPI', () => {
         // Creating an Observable that at an interval of 1min, polls an API call
-        Rx.Observable.interval(6000)
+        Rx.Observable.interval(60000)
             .switchMap(() =>
                 //We create an Observable on a Promise that has itself been converted to an Observable
                 //which emits a value each time it resolves an API call value

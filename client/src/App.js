@@ -20,9 +20,11 @@ class App extends Component {
     };
 
     // Subscribing to news API web socket
-    subscribeToNewsAPI((newsAPIArticles) => this.setState({
-      newsAPIArticles
-    }));
+    subscribeToNewsAPI((newsAPIArticles) => {
+      this.setState({
+        newsAPIArticles
+      });
+    });
 
     updateNewsAPIArticlesLocation(this.state.location);
   }
