@@ -7,11 +7,16 @@ function subscribeToNewsAPI(callback) {
     socket.on('newsAPI', newsAPIArticles => callback(newsAPIArticles));
 }
 
-function fetchNewsAPIArticles(newLocation) {
-    socket.emit('fetchNewsAPIArticles', newLocation);
+function updateNewsAPIArticlesLocation(newLocation) {
+    socket.emit('updateNewsAPIArticlesLocation', newLocation);
+}
+
+function startPollingNewsAPI() {
+    socket.emit('startPollingNewsAPI');
 }
 
 export {
     subscribeToNewsAPI,
-    fetchNewsAPIArticles
+    updateNewsAPIArticlesLocation,
+    startPollingNewsAPI
 };

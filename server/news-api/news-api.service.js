@@ -4,6 +4,7 @@ const { NEWS_API_KEY } = require('./news-api.config');;
 
 const newsapi = new NewsAPI(NEWS_API_KEY);
 
+// Returns a promise API call
 function getArticlesNewsAPI(country) {
     return newsapi.v2.topHeadlines({
         country

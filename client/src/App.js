@@ -6,7 +6,8 @@ import NewsAPIArticle from './components/news-api-article.component';
 
 import {
   subscribeToNewsAPI,
-  fetchNewsAPIArticles
+  updateNewsAPIArticlesLocation,
+  startPollingNewsAPI
 } from './services/news-api.client';
 
 class App extends Component {
@@ -22,10 +23,12 @@ class App extends Component {
     subscribeToNewsAPI((newsAPIArticles) => this.setState({
       newsAPIArticles
     }));
+
+    updateNewsAPIArticlesLocation(this.state.location);
   }
 
   componentDidMount() {
-    fetchNewsAPIArticles(this.state.location);
+    startPollingNewsAPI();
   }
 
   render() {
@@ -42,7 +45,7 @@ class App extends Component {
             })
           }} type="text" />
           <button onClick={() => {
-            fetchNewsAPIArticles(this.state.location);
+            updateNewsAPIArticlesLocation(this.state.location);
           }}>Change location of articles</button>
         </article>
         {this.state.newsAPIArticles !== null &&
