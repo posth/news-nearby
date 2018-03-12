@@ -1,8 +1,16 @@
 const Rx = require('rxjs/Rx');
-const io = require('socket.io')();
-const newsAPISocketPort = 8000;
+
+// NewsAPI Websocket
+const newsAPISocketPort = 8001;
+const io = require('socket.io')(newsAPISocketPort);
+
+// Socket connection to core stream
+const openSocket = require('socket.io-client');
+const coreSocket = openSocket('http://localhost:8000/newsapi');
+
 const { getArticlesNewsAPI } = require('./news-api.service');
 
+// NewsAPI Websocket behavior
 io.on('connection', (client) => {
 
     // An Observable stream of location and articles values we can subscribe to and update within the scope of this websocket
@@ -12,13 +20,17 @@ io.on('connection', (client) => {
     // Subscribing to any change in the Subject stream of articles, if there is a change, we emit it back to the client
     articles$
         .filter(newArticlesReceived => newArticlesReceived)
-        .subscribe(newArticlesToEmit => client.emit('newsAPI', newArticlesToEmit));
+        .subscribe(newArticlesToEmit => {
+            coreSocket.emit('newsStreamUpdated', newArticlesToEmit);
+        });
 
     // Whenever the client updates the location, we update the value in our local Subject stream
-    client.on('updateNewsAPIArticlesLocation', (newLocation) => {
+    client.on('updateNewsAPIFilterParameters', (filterParameters) => {
+
+        // TODO - for now filterParameters = 'ca' straight from the UI 
 
         // The new location we get from the client we update it's Subject stream
-        location$.next(newLocation);
+        location$.next(filterParameters);
 
         // Make an API call and update the articles Subject stream when the API promise is resolved
         Rx.Observable.fromPromise(getArticlesNewsAPI(location$.value))
@@ -34,8 +46,8 @@ io.on('connection', (client) => {
                 //which emits a value each time it resolves an API call value
                 Rx.Observable.fromPromise(getArticlesNewsAPI(location$.value))
             )
-            .subscribe(newArticles => articles$.next(newArticles))
+            .subscribe(newArticles => {
+                articles$.next(newArticles);
+            })
     });
 });
-
-io.listen(newsAPISocketPort);

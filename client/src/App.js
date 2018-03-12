@@ -5,32 +5,32 @@ import './App.css';
 import NewsAPIArticle from './components/news-api-article.component';
 
 import {
-  subscribeToNewsAPI,
-  updateNewsAPIArticlesLocation,
-  startPollingNewsAPI
-} from './services/news-api.client';
+  onNewsStreamUpdated,
+  startNewsStream,
+  updateNewsStreamFilterParameters
+} from './services/core-stream.client.js';
 
 class App extends Component {
 
   constructor() {
     super();
+
     this.state = {
       location: 'ca',
-      newsAPIArticles: null
+      newsArticles: null
     };
 
-    // Subscribing to news API web socket
-    subscribeToNewsAPI((newsAPIArticles) => {
+    onNewsStreamUpdated((newsArticles) => {
       this.setState({
-        newsAPIArticles
+        newsArticles
       });
     });
 
-    updateNewsAPIArticlesLocation(this.state.location);
+    updateNewsStreamFilterParameters(this.state.location);
   }
 
   componentDidMount() {
-    startPollingNewsAPI();
+    startNewsStream();
   }
 
   render() {
@@ -47,15 +47,15 @@ class App extends Component {
             })
           }} type="text" />
           <button onClick={() => {
-            updateNewsAPIArticlesLocation(this.state.location);
+            updateNewsStreamFilterParameters(this.state.location);
           }}>Change location of articles</button>
         </article>
-        {this.state.newsAPIArticles !== null &&
+        {this.state.newsArticles !== null &&
           <section>
-            <h2>News API Articles</h2>
+            <h2>News Articles</h2>
             <article>
               {
-                this.state.newsAPIArticles["articles"]
+                this.state.newsArticles["articles"]
                   .map((article, index) => <NewsAPIArticle article={article} key={index} />)
               }
             </article>

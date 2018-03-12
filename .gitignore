@@ -4,6 +4,9 @@
 client/node_modules
 client/public
 
+# corestream service ignore files
+server/core-stream/node_modules
+
 # newsapi service ignore files
 server/news-api/node_modules
 
